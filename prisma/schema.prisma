@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 個別・ETF・投信共通
+model Symbol {
+  // ティッカー・銘柄コード・投信コード
+  id String
+  // 取得元の振り分け用
+  type String @default("en_etf")
+  // retry3カウントした場合、論理削除
+  retry Int @default(0)
+  // 上場取り消しでtrueに更新する
+  deleted Boolean @default(false)
+  // 差分ありで更新した日付
+  update_at DateTime @default("2000-01-01T00:00:00+02:00")
+  // 定期実行条件
+  get_at DateTime @default("2000-01-01T00:00:00+02:00")
+  explain SymbolExplain?
+  country SymbolCountry[]
+  hold SymbolHold[]
+  section SymbolSection[]
+  @@id([id])
+}
+
+// 説明（個別に追記が必要な情報）
+model SymbolExplain {
+  id String
+  name String?
+  summary String? // 客観的にどういった銘柄か
+  comment String? // 主観的にどういった銘柄か
+  tags String? // 検索キーワード // カンマ区切りで保存する
+  issuer String? // 発行者
+  yield_per Decimal? @db.Decimal(5,2) @default(0) // 利回り
+  expense_per Decimal? @db.Decimal(5,2) @default(0) // 経費率
+  competing_etf String? // 競合ETF // カンマ区切りで保存する
+  symbol Symbol @relation(fields: [id], references: [id])
+  @@id([id])
+}
+
+// ETF（国分散）
+model SymbolCountry {
+  id String
+  name String
+  per Decimal @db.Decimal(5,2)
+  symbol Symbol @relation(fields: [id], references: [id])
+  @@id([id,name])
+}
+
+// ETF（主要投資先）
+model SymbolHold {
+  id String
+  name String
+  per Decimal @db.Decimal(5,2)
+  holdId  String?
+  symbol Symbol @relation(fields: [id], references: [id])
+  @@id([id,name])
+}
+
+// ETF（業界分散）
+model SymbolSection {
+  id String
+  name String
+  per Decimal @db.Decimal(5,2)
+  symbol Symbol @relation(fields: [id], references: [id])
+  @@id([id,name])
+}
+
+model Questions {
+  id String
+  question String
+  deleted Boolean @default(false)
+  answers Answers[]
+    @@id([id])
+}
+
+model Answers {
+  id String
+  order Int
+  content String
+  nextId String
+  questions Questions @relation(fields: [id], references: [id])
+  @@id([id, order])
+}
