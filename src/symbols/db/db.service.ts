@@ -52,7 +52,7 @@ export class DbService {
       where: { id },
       data: {
         retry: count,
-        // get_at: new Date(),
+        get_at: new Date(),
       },
     });
   }
