@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  HD_DATABASE_URL: ${{secrets.DATABASE_URL}}
+  HD_EN_ETF_PREFIX_URL: ${{secrets.EN_ETF_PREFIX_URL}}
+  HD_EN_ETF_ISSUER_COMPETING_PREFIX_URL: ${{secrets.EN_ETF_ISSUER_COMPETING_PREFIX_URL}}
+  HD_EN_ETF_NAME_SUMMARY_URL: ${{secrets.EN_ETF_NAME_SUMMARY_URL}}
+  HD_NODE_ENV: "production"
+  HD_NPM_CONFIG_PRODUCTION: "false"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
