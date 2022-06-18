@@ -367,54 +367,6 @@ const _getExplainStatic = async (page: puppeteer.Page, symbolId: string): Promis
     }
   }
 
-  // ■運用会社・競合ETF★このページは『headless: true』でtimeoutするため対象外とする
-  // const IssuerCompetingUrl = process.env.EN_ETF_ISSUER_COMPETING_PREFIX_URL + symbolId;
-  // await page.goto(IssuerCompetingUrl, { waitUntil: 'networkidle2' });
-
-  // try {
-  //   await page.waitForXPath('/html/body/section/div/div/div/span', {
-  //     visible: true,
-  //   });
-  //   // 表示が完了する（であろう）ミリ秒数待つ
-  //   await wait(1000);
-
-  //   // 日本語が取得できない場合はこっちのページから取得
-  //   if (!name) {
-  //     // ■summary
-  //     const summaryXpath = '//*[@id="fundDescription"]';
-  //     const summaryElems = await page.$x(summaryXpath);
-  //     const summaryJsHandle = await summaryElems[0].getProperty('innerText');
-  //     const summaryJson: string = await summaryJsHandle.jsonValue();
-  //     const summarySplit = summaryJson.split(/\n/);
-  //     summary = summarySplit[2];
-  //   }
-
-  //   // 『Summary Data』から取得
-  //   const issuerRegexp = /Issuer/;
-  //   const competing_etfRegexp = /Competing ETFs/;
-  //   const naRegexp = /N\/A/;
-  //   const summaryListXpath = '//*[@id="fundSummaryData"]/section/div';
-  //   const summaryListElems = await page.$x(summaryListXpath);
-  //   for (let i = 0; i < summaryListElems.length; i++) {
-  //     const summaryListJsHandle = await summaryListElems[i].getProperty('innerText');
-  //     const summaryList: string = await summaryListJsHandle.jsonValue();
-  //     if (issuerRegexp.test(summaryList)) {
-  //       // ■issuer
-  //       const summaryListSplit = summaryList.split(/\n/);
-  //       issuer = summaryListSplit[1];
-  //     } else if (competing_etfRegexp.test(summaryList)) {
-  //       // ■competing_etf
-  //       const summaryListSplit = summaryList.split(/\n/);
-  //       const summaryListReplace = summaryListSplit[1].replace(/ /g, '');
-  //       if (naRegexp.test(summaryListReplace)) {
-  //         competing_etf = '';
-  //       } else {
-  //         competing_etf = summaryListReplace;
-  //       }
-  //     }
-  //   }
-  // } catch (error) {}
-
   return {
     id: null,
     name: name ?? '',

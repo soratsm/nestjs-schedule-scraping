@@ -17,12 +17,9 @@ export const createBrowser = async (): Promise<puppeteer.Browser> => {
     // https://peter.sh/experiments/chromium-command-line-switches/
     args: [
       // `--window-size=${windowSize.width},${windowSize.height}`,
-      '--disable-infobars',
       // '-wait-for-browser',
-      '--incognito',
       '--no-sandbox',
       '--disable-setuid-sandbox',
-      '--lang=ja',
     ],
   });
 
