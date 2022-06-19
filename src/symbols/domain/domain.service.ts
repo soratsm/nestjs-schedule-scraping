@@ -14,6 +14,9 @@ export class DomainService {
     private readonly dbService: DbService,
   ) {}
 
+  /**
+   * 取得対象の銘柄選定し、関連情報の更新があればDBを更新する
+   */
   async fetchAndSaveSymbolData(): Promise<void> {
     const symbolData = await this.dbService.readScrapingSymbolData();
     if (!symbolData) {
@@ -29,7 +32,6 @@ export class DomainService {
         symbolData.id,
         isFirstScraping,
       );
-      this.logger.debug(explain);
       if (isFirstScraping) {
         // DBのSymbolExplainがない場合は初回登録
         await this.dbService.updateSymbol(symbolData.id);

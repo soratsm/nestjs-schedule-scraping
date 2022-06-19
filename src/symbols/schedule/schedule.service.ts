@@ -4,8 +4,11 @@ import { Cron } from '@nestjs/schedule';
 import { DomainService } from '@/symbols/domain/domain.service';
 
 /**
- * 定期実行
- * {@link https://crontab.guru/examples.html CronExamples}
+ * 銘柄情報の取得更新処理の定期実行
+ *
+ * {@link https://crontab.guru/examples.html Cron Examples}
+ *
+ * {@link https://zenn.dev/kisihara_c/books/nest-officialdoc-jp/viewer/techniques-taskscheduling NestJS techniques-taskscheduling}
  */
 
 @Injectable()

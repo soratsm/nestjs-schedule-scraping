@@ -3,7 +3,9 @@ import { PrismaService } from '@/prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
 
-// データ投入の術を別途検討するよりテストプログラムで代用する
+/**
+ * データ投入の術を別途検討するよりテストプログラムで代用する
+ */
 describe('ChatsService', () => {
   let service: ChatsService;
   const timeout = 1000 * 40;

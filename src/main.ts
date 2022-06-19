@@ -26,6 +26,7 @@ async function bootstrap() {
     optionsSuccessStatus: 200,
   });
 
+  // herokuでの起動に際してもportの環境変数読み取りは必要
   const port = process.env.PORT || 3000;
   await app.listen(port);
 }

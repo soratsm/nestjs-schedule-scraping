@@ -1,10 +1,10 @@
 {
-  "name": "backend-nestjs",
+  "name": "nestjs-schedule-scraping",
   "version": "0.0.1",
   "description": "",
   "author": "soratsm",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

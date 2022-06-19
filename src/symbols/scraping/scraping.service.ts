@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as puppeteer from 'puppeteer';
 import { SymbolCountry, SymbolExplain, SymbolHold, SymbolSection } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime';
+import * as puppeteer from 'puppeteer';
 
-import { wait } from '@/utils/wait';
-import { createBrowser } from '@/utils/createBrowser';
 import { closeFirstPage } from '@/utils/closeFirstPage';
+import { createBrowser } from '@/utils/createBrowser';
+import { wait } from '@/utils/wait';
 
 type Explain = SymbolExplain | null;
 type Country = SymbolCountry[] | null;
@@ -24,10 +24,10 @@ export class ScrapingService {
   private readonly logger = new Logger(ScrapingService.name);
 
   /**
-   *
-   * @param {string} _sourceSymbolId - 取得対象の銘柄コード
-   * @param {boolean} _isFirstScraping - 初回取得の銘柄コードか否か
-   * @returns {ScrapedResult}
+   * スクレイピングを行い、対象ページがない場合はエラーキャッチして終了
+   * @param _sourceSymbolId 取得対象の銘柄コード
+   * @param _isFirstScraping 初回取得の銘柄コードか否か
+   * @returns 対象銘柄の関連データ
    */
   async scrape(_sourceSymbolId: string, _isFirstScraping: boolean): Promise<ScrapedResult> {
     let browser: puppeteer.Browser;
@@ -48,6 +48,18 @@ export class ScrapingService {
   }
 }
 
+/**
+ * スクレイピングロジック本体。XPathによって対象を取得しデータ構造に格納
+ * @param browser ブラウザ情報を引き回して使用
+ * @param symbolId 初回取得の銘柄コードか否か
+ * @returns 対象銘柄の関連データ
+ *
+ * {@link https://qiita.com/go_sagawa/items/85f97deab7ccfdce53ea puppeteerでの要素の取得方法}
+ *
+ * {@link https://qiita.com/k1832/items/87a8cf609b4ccf2c6195 Puppeteerを使って簡単にWebスクレイピングする}
+ *
+ * {@link https://qiita.com/rh_taro/items/32bb6851303cbc613124 puppeteerでよく使うであろう処理の書き方}
+ */
 const _scrapeSymbolData = async (
   browser: puppeteer.Browser,
   symbolId: string,
@@ -57,7 +69,6 @@ const _scrapeSymbolData = async (
   const page = await browser.newPage();
 
   await closeFirstPage(browser);
-  // await page.setExtraHTTPHeaders({ 'Accept-Language': 'ja' });
 
   await page.goto(url, { waitUntil: 'networkidle2' });
   await page.waitForXPath('/html/body/div[2]/div[7]/h1', {
@@ -265,6 +276,12 @@ const _scrapeSymbolData = async (
   };
 };
 
+/**
+ * 基本情報(運用会社等静的情報)の取得
+ * @param page 投資情報のページ
+ * @param symbolId 取得対象の銘柄コード
+ * @returns 対象銘柄の基本情報
+ */
 const _getExplainStatic = async (page: puppeteer.Page, symbolId: string): Promise<Explain> => {
   let name: string;
   let summary: string;
